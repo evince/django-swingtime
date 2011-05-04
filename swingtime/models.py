@@ -151,8 +151,10 @@ class OccurrenceManager(models.Manager):
                 end_time__gt=end
             )
         )
-
-        return qs.filter(event=event) if event else qs
+        if event:
+            return qs.filter(event=event)
+        else:
+            return qs
 
 
 class Occurrence(models.Model):
