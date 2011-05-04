@@ -4,7 +4,7 @@ from distutils.core import setup
 
 VERSION = '1.0' 
 
-README_FILE = open('README')
+README_FILE = open('README.markdown')
 try:
     long_description = README_FILE.read()
 finally:
