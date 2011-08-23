@@ -106,7 +106,7 @@ class Command(NoArgsCommand):
     
     def handle_noargs(self, **options):
         import os
-        dbpath = os.path.join(settings.PROJECT_DIR, settings.DATABASE_NAME)
+        dbpath = os.path.join(settings.PROJECT_DIR, settings.DATABASES["default"]["NAME"])
         if os.path.exists(dbpath):
             os.remove(dbpath)
 
