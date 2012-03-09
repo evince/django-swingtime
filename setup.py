@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-from distutils.core import setup
+from setuptools import setup, find_packages
+
+#from distutils.core import setup
 
 
 VERSION = '1.0' 
@@ -19,8 +21,10 @@ setup(
     long_description=long_description,
     author='David A Krauth',
     platforms=['any'],
-    packages=[
-        'swingtime',
-        'swingtime.conf'
-    ],
+   packages = find_packages('src'),
+   package_dir = {'': 'src'},
+    # packages=[
+    #     'swingtime',
+    #     'swingtime.conf'
+    # ],
 )

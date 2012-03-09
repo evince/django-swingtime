@@ -24,9 +24,8 @@ DATABASES = {
 
 SITE_ID = 1
 TIME_ZONE = 'Europe/Zurich'
-LANGUAGE_CODE = 'de'
-LANGUAGES = (('en', 'English'),
-             ('de', 'German'),)
+LANGUAGE_CODE = 'en'
+LANGUAGES = (('en', 'English'),)
 USE_I18N = True
 USE_L10N = True
 FIRST_DAY_OF_WEEK = 1
