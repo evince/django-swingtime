@@ -315,12 +315,3 @@ def month_view(request, year, month, template='swingtime/monthly_view.html',
     )
 
     return render(request, template, data)
-
-        week=(weekdays[i] for i in range(settings.FIRST_DAY_OF_WEEK, settings.FIRST_DAY_OF_WEEK+7)),
-        this_month=dtstart,
-        next_month=dtstart + timedelta(days=+last_day),
-        last_month=dtstart + timedelta(days=-1),
-    )
-
-    return render_to_response(template, data,
-        context_instance=RequestContext(request))
