@@ -6,7 +6,7 @@ from django import http
 from django.conf import settings
 from django.db import models
 from django.template.context import RequestContext
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render
 
 from swingtime.models import Event, Occurrence
 from swingtime import utils, forms
@@ -15,15 +15,16 @@ from swingtime.conf import settings as swingtime_settings
 from dateutil import parser
 
 if settings.FIRST_DAY_OF_WEEK is not None:
-    if settings.FIRST_DAY_OF_WEEK==0:
+    if settings.FIRST_DAY_OF_WEEK == 0:
         calendar.setfirstweekday(6)
     else:
         calendar.setfirstweekday(settings.FIRST_DAY_OF_WEEK-1)
 elif swingtime_settings.CALENDAR_FIRST_WEEKDAY is not None:
     calendar.setfirstweekday(swingtime_settings.CALENDAR_FIRST_WEEKDAY)
 
+
 def event_listing(request, template='swingtime/event_list.html', events=None,
-    **extra_context):
+                  **extra_context):
     """
     View all ``events``.
 
@@ -39,14 +40,15 @@ def event_listing(request, template='swingtime/event_list.html', events=None,
     elif hasattr(events, '_clone'):
         events = events._clone()
 
-    return render_to_response(template,
+    return render(
+        request, template,
         dict(extra_context, events=events),
         context_instance=RequestContext(request))
 
 
 def event_view(request, pk, template='swingtime/event_detail.html',
-    event_form_class=forms.EventForm,
-    recurrence_form_class=forms.MultipleOccurrenceForm):
+               event_form_class=forms.EventForm,
+               recurrence_form_class=forms.MultipleOccurrenceForm):
     """
     View an ``Event`` instance and optionally update either the event or its
     occurrences.
@@ -84,14 +86,16 @@ def event_view(request, pk, template='swingtime/event_detail.html',
             initial=dict(dtstart=datetime.now())
         )
 
-    return render_to_response(template,
+    return render(
+        request,
+        template,
         dict(event=event, event_form=event_form, recurrence_form=recurrence_form),
         context_instance=RequestContext(request))
 
 
 def occurrence_view(request, event_pk, pk,
-    template='swingtime/occurrence_detail.html',
-    form_class=forms.SingleOccurrenceForm):
+                    template='swingtime/occurrence_detail.html',
+                    form_class=forms.SingleOccurrenceForm):
     """
     View a specific occurrence and optionally handle any updates.
 
@@ -112,14 +116,15 @@ def occurrence_view(request, event_pk, pk,
     else:
         form = form_class(instance=occurrence)
 
-    return render_to_response(template,
+    return render(
+        template,
         dict(occurrence=occurrence, form=form),
         context_instance=RequestContext(request))
 
 
 def add_event(request, template='swingtime/add_event.html',
-    event_form_class=forms.EventForm,
-    recurrence_form_class=forms.MultipleOccurrenceForm):
+              event_form_class=forms.EventForm,
+              recurrence_form_class=forms.MultipleOccurrenceForm):
     """
     Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
 
@@ -156,13 +161,15 @@ def add_event(request, template='swingtime/add_event.html',
         event_form = event_form_class()
         recurrence_form = recurrence_form_class(initial=dict(dtstart=dtstart))
 
-    return render_to_response(template,
+    return render(
+        request,
+        template,
         dict(dtstart=dtstart, event_form=event_form, recurrence_form=recurrence_form),
         context_instance=RequestContext(request))
 
 
 def _datetime_view(request, template, dt, timeslot_factory=None,
-    items=None, params=None):
+                   items=None, params=None):
     """
     Build a time slot grid representation for the given datetime ``dt``. See
     utils.create_timeslot_table documentation for items and params.
@@ -191,9 +198,10 @@ def _datetime_view(request, template, dt, timeslot_factory=None,
         timeslots=timeslot_factory(dt, items, **params)
     )
 
-    return render_to_response(template, data,
-        context_instance=RequestContext(request))
-
+    return render(
+        request,
+        template, data
+    )
 
 
 def day_view(request, year, month, day, template='swingtime/daily_view.html', **params):
@@ -209,7 +217,6 @@ def today_view(request, template='swingtime/daily_view.html', **params):
     See documentation for function``_datetime_view``.
     """
     return _datetime_view(request, template, datetime.now(), **params)
-
 
 
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
@@ -249,16 +256,18 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 
     by_month = [
         (dt, list(items))
-        for dt,items in itertools.groupby(occurrences, grouper_key)
+        for dt, items in itertools.groupby(occurrences, grouper_key)
     ]
 
-    return render_to_response(template,
-        dict(year=year, by_month=by_month, next_year=year + 1, last_year=year - 1),
-        context_instance=RequestContext(request))
+    return render(
+        request,
+        template,
+        dict(year=year, by_month=by_month, next_year=year + 1, last_year=year - 1)
+    )
 
 
 def month_view(request, year, month, template='swingtime/monthly_view.html',
-    queryset=None):
+               queryset=None):
     """
     Render a traditional calendar grid view with temporal navigation variables.
 
@@ -271,7 +280,7 @@ def month_view(request, year, month, template='swingtime/monthly_view.html',
         a list of rows containing (day, items) cells, where day is the day of
         the month integer and items is a (potentially empty) list of occurrence
         for the day
-        
+
     week
         localized list of weekdays, depending on FIRST_DAY_OF_WEEK
 
@@ -302,9 +311,9 @@ def month_view(request, year, month, template='swingtime/monthly_view.html',
 
     by_day = dict([
         (dom, list(items))
-        for dom,items in itertools.groupby(occurrences, lambda o: o.start_time.day)
+        for dom, items in itertools.groupby(occurrences, lambda o: o.start_time.day)
     ])
-    
+
     weekdays = range(8)
     for wd in forms.WEEKDAY_LONG:
         weekdays[wd[0]] = wd[1]
@@ -319,5 +328,7 @@ def month_view(request, year, month, template='swingtime/monthly_view.html',
         last_month=dtstart + timedelta(days=-1),
     )
 
-    return render_to_response(template, data,
-        context_instance=RequestContext(request))
+    return render(
+        request,
+        template, data
+    )
