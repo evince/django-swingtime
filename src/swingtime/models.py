@@ -2,7 +2,7 @@ from datetime import datetime, date, timedelta
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -28,7 +28,7 @@ class Note(models.Model):
 
     content_type = models.ForeignKey(ContentType, verbose_name=_('content type'))
     object_id = models.PositiveIntegerField(_('object id'))
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
         verbose_name = _('note')
@@ -60,7 +60,7 @@ class Event(models.Model):
     title = models.CharField(_('title'), max_length=32)
     description = models.CharField(_('description'), max_length=100)
     event_type = models.ForeignKey(EventType, verbose_name=_('event type'))
-    notes = generic.GenericRelation(Note, verbose_name=_('notes'))
+    notes = GenericRelation(Note, verbose_name=_('notes'))
 
     class Meta:
         verbose_name = _('event')
@@ -165,7 +165,7 @@ class Occurrence(models.Model):
     start_time = models.DateTimeField(_('start time'))
     end_time = models.DateTimeField(_('end time'))
     event = models.ForeignKey(Event, verbose_name=_('event'), editable=False)
-    notes = generic.GenericRelation(Note, verbose_name=_('notes'))
+    notes = GenericRelation(Note, verbose_name=_('notes'))
 
     objects = OccurrenceManager()
 
