@@ -1,5 +1,5 @@
 from django.conf import settings
-import swingtime_settings
+import .swingtime_settings
 
 
 class AppSettings(object):
