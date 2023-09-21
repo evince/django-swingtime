@@ -16,9 +16,9 @@ class AppSettings(object):
             self.SETTINGS_MODULE = getattr(settings, global_override)
             try:
                 mod = __import__(self.SETTINGS_MODULE, {}, {}, [''])
-            except ImportError, e:
+            except ImportError:
                 raise ImportError(
-                    "Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?): %s" % (self.SETTINGS_MODULE, e)
+                    "Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?)" % (self.SETTINGS_MODULE)
                 )
 
             for setting in dir(mod):
@@ -27,5 +27,6 @@ class AppSettings(object):
 
     def get_all_members(self):
         return dir(self)
+
 
 settings = AppSettings(swingtime_settings, 'SWINGTIME_SETTINGS_MODULE')
