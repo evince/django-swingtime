@@ -70,7 +70,7 @@ class Event(models.Model):
     def __unicode__(self):
         return self.title
 
-    @models.permalink
+    # @models.permalink
     def get_absolute_url(self):
         return ('swingtime-event', [str(self.id)])
 
@@ -177,7 +177,7 @@ class Occurrence(models.Model):
     def __unicode__(self):
         return u'%s: %s' % (self.title, self.start_time.isoformat())
 
-    @models.permalink
+    # @models.permalink
     def get_absolute_url(self):
         return ('swingtime-occurrence', [str(self.event.id), str(self.id)])
 
