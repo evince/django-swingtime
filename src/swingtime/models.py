@@ -26,7 +26,7 @@ class Note(models.Model):
     note = models.TextField(_('note'))
     created = models.DateTimeField(_('created'), auto_now_add=True)
 
-    content_type = models.ForeignKey(ContentType, verbose_name=_('content type'))
+    content_type = models.ForeignKey(ContentType, verbose_name=_('content type'), on_delete=models.DO_NOTHING)
     object_id = models.PositiveIntegerField(_('object id'))
     content_object = GenericForeignKey('content_type', 'object_id')
 
@@ -59,7 +59,7 @@ class Event(models.Model):
     """
     title = models.CharField(_('title'), max_length=32)
     description = models.CharField(_('description'), max_length=100)
-    event_type = models.ForeignKey(EventType, verbose_name=_('event type'))
+    event_type = models.ForeignKey(EventType, verbose_name=_('event type'), on_delete=models.DO_NOTHING)
     notes = GenericRelation(Note, verbose_name=_('notes'))
 
     class Meta:
@@ -164,7 +164,7 @@ class Occurrence(models.Model):
     """
     start_time = models.DateTimeField(_('start time'))
     end_time = models.DateTimeField(_('end time'))
-    event = models.ForeignKey(Event, verbose_name=_('event'), editable=False)
+    event = models.ForeignKey(Event, verbose_name=_('event'), editable=False, on_delete=models.DO_NOTHING)
     notes = GenericRelation(Note, verbose_name=_('notes'))
 
     objects = OccurrenceManager()
@@ -193,9 +193,8 @@ class Occurrence(models.Model):
         return self.event.event_type
 
 
-
 def create_event(title, event_type, description='', start_time=None,
-        end_time=None, note=None, **rrule_params):
+                 end_time=None, note=None, **rrule_params):
     """
     Convenience function to create an ``Event``, optionally create an
     ``EventType``, and associated ``Occurrence``s. ``Occurrence`` creation
