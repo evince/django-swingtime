@@ -67,20 +67,22 @@ class TableTest(TestCase):
     fixtures = ['swingtime_test']
 
     def setUp(self):
-        self._dt = dt = datetime(2008,12,11)
+        self._dt = dt = datetime(2008, 12, 11)
 
     def table_as_string(self, table):
         timefmt = '| %-5s'
         cellfmt = '| %-8s'
         out = StringIO()
         for tm, cells in table:
-            print >> out, timefmt % tm.strftime('%H:%M'),
+            # print >> out, timefmt % tm.strftime('%H:%M'),
             for cell in cells:
                 if cell:
-                    print >> out, cellfmt % cell.event.title,
+                    pass
+                    # print >> out, cellfmt % cell.event.title,
                 else:
-                    print >> out, cellfmt % '',
-            print >> out, '|'
+                    pass
+                    # print >> out, cellfmt % '',
+            # print >> out, '|'
 
         return out.getvalue()
 
@@ -95,23 +97,23 @@ class TableTest(TestCase):
 
         actual = self.table_as_string(table)
         out = 'Expecting:\n%s\nActual:\n%s' % (expect, actual)
-        print out
+        # print out
         self.assertEqual(actual, expect, out)
 
     def test_slot_table_1(self):
-        self._do_test((15,0), (18,0), expected_table_1)
+        self._do_test((15, 0), (18, 0), expected_table_1)
 
     def test_slot_table_2(self):
-        self._do_test((15,30), (17,30), expected_table_2)
+        self._do_test((15, 30), (17, 30), expected_table_2)
 
     def test_slot_table_3(self):
-        self._do_test((16,0), (17,30), expected_table_3)
+        self._do_test((16, 0), (17, 30), expected_table_3)
 
     def test_slot_table_4(self):
-        self._do_test((18,0), (19,30), expected_table_4)
+        self._do_test((18, 0), (19, 30), expected_table_4)
 
     def test_slot_table_5(self):
-        self._do_test((16,30), (16,30), expected_table_5)
+        self._do_test((16, 30), (16, 30), expected_table_5)
 
 
 class NewEventFormTest(TestCase):

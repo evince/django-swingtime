@@ -14,9 +14,8 @@ from dateutil import rrule
 from swingtime import models as swingtime
 
 
-
 def create_sample_data():
-    
+
     # Create the studio's event types
     ets = dict((
         (abbr, swingtime.EventType.objects.create(abbr=abbr, label=label))
@@ -30,13 +29,9 @@ def create_sample_data():
             ('spc',  'Special Event'),
         )
     ))
-    print __doc__
-    print 'Created event types: %s' % (
-        ', '.join(['%s' % et for et in swingtime.EventType.objects.all()]),
-    )
-    
+
     now = datetime.now()
-    
+
     # create a single occurrence event
     evt = swingtime.create_event(
         'Grand Opening',
@@ -46,8 +41,7 @@ def create_sample_data():
         end_time=datetime.combine(now.date(), time(18)),
         note='Free tea, sushi, and sake'
     )
-    print 'Created event "%s" with %d occurrences' % (evt, evt.occurrence_set.count())
-    
+
     # create an event with multiple occurrences by fixed count
     evt = swingtime.create_event(
         'Beginner Class',
@@ -57,7 +51,6 @@ def create_sample_data():
         count=30,
         byweekday=(rrule.MO, rrule.WE, rrule.FR)
     )
-    print 'Created event "%s" with %d occurrences' % (evt, evt.occurrence_set.count())
 
     # create an event with multiple occurrences by ending date (until)
     evt = swingtime.create_event(
@@ -68,7 +61,6 @@ def create_sample_data():
         until=now + timedelta(days=+70),
         byweekday=(rrule.MO, rrule.WE, rrule.FR)
     )
-    print 'Created event "%s" with %d occurrences' % (evt, evt.occurrence_set.count())
 
     # create an event with multiple occurrences by fixed count on monthly basis
     evt = swingtime.create_event(
@@ -81,7 +73,6 @@ def create_sample_data():
         freq=rrule.MONTHLY,
         byweekday=(rrule.TH(+1), rrule.TH(+3))
     )
-    print 'Created event "%s" with %d occurrences' % (evt, evt.occurrence_set.count())
 
     # create an event with multiple occurrences and alternate intervale
     evt = swingtime.create_event(
@@ -94,16 +85,11 @@ def create_sample_data():
         count=6,
         byweekday=(rrule.SU)
     )
-    print 'Created event "%s" with %d occurrences' % (evt, evt.occurrence_set.count())
-    print
-
-
 
 
 class Command(NoArgsCommand):
     help = 'Run the swingtime demo. If an existing demo database exists, it will recreated.'
-    
-    
+
     def handle_noargs(self, **options):
         import os
         dbpath = os.path.join(settings.PROJECT_DIR, settings.DATABASES["default"]["NAME"])
@@ -112,4 +98,3 @@ class Command(NoArgsCommand):
 
         call_command('syncdb', noinput=True)
         create_sample_data()
-

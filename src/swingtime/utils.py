@@ -50,9 +50,9 @@ def css_class_cycler():
     return defaultdict(
         lambda: itertools.cycle(('evt-even', 'evt-odd')).next,
         ((e.abbr, itertools.cycle((
-             'evt-%s-even' % e.abbr,
-             'evt-%s-odd' % e.abbr
-             )).next) for e in EventType.objects.all()
+            'evt-%s-even' % e.abbr,
+            'evt-%s-odd' % e.abbr
+        )).next) for e in EventType.objects.all()
         )
     )
 
@@ -62,6 +62,7 @@ class BaseOccurrenceProxy(object):
     A simple wrapper class for handling the presentational aspects of an
     ``Occurrence`` instance.
     """
+
     def __init__(self, occurrence, col):
         self.column = col
         self._occurrence = occurrence
@@ -83,21 +84,21 @@ class DefaultOccurrenceProxy(BaseOccurrenceProxy):
             self.title
         )
 
-        self._str = itertools.chain((link,),itertools.repeat(r'\\\///')).next
+        self._str = itertools.chain((link,), itertools.repeat(r'\\\///')).next
 
     @html_mark_safe
     def __unicode__(self):
-        print self.title
+        # print self.title
         return self._str()
 
 
 def create_timeslot_table(dt=None, items=None,
-    start_time=swingtime_settings.TIMESLOT_START_TIME,
-    end_time_delta=swingtime_settings.TIMESLOT_END_TIME_DURATION,
-    time_delta=swingtime_settings.TIMESLOT_INTERVAL,
-    min_columns=swingtime_settings.TIMESLOT_MIN_COLUMNS,
-    css_class_cycles=css_class_cycler,
-    proxy_class=DefaultOccurrenceProxy):
+                          start_time=swingtime_settings.TIMESLOT_START_TIME,
+                          end_time_delta=swingtime_settings.TIMESLOT_END_TIME_DURATION,
+                          time_delta=swingtime_settings.TIMESLOT_INTERVAL,
+                          min_columns=swingtime_settings.TIMESLOT_MIN_COLUMNS,
+                          css_class_cycles=css_class_cycler,
+                          proxy_class=DefaultOccurrenceProxy):
     """
     Create a grid-like object representing a sequence of times (rows) and
     columns where cells are either empty or reference a wrapper object for
